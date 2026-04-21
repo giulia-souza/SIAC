@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Exemplo de uma tabela do SIAC só para testar a conexão
+model Microrganismo {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  formato   String
+}
+
+enum RegraUsuario {
+  ESTUDANTE
+  PROFESSOR
+  ADMINISTRADOR
+}
+model Usuario{
+  id        Int     @id @default(autoincrement())
+  nome      String
+  email     String  @unique
+  password  String
+  regra     RegraUsuario @default(ESTUDANTE)
+  resetToken        String?   @unique
+  resetTokenExpires DateTime?
+}
