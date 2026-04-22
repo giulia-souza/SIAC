@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import nodemailer from 'nodemailer'; // 1. Importamos o Nodemailer
+import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 
 export async function POST(request: Request) {
@@ -12,15 +12,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Se o email existir, o link será enviado.' });
     }
 
-    const token = crypto.randomBytes(32).toString('hex');
-    const validade = new Date(Date.now() + 3600000);
+    const token = crypto.randomBytes(32).toString('hex');//crio um token aleatório para resetar a senha
+    const validade = new Date(Date.now() + 3600000);//com validade de 1h
 
-    await prisma.usuario.update({
+    await prisma.usuario.update({//atualizo no banco o token e a validade
       where: { email },
       data: { resetToken: token, resetTokenExpires: validade },
     });
 
-    // 2. Configuramos o "Transportador" (seu Gmail)
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -29,7 +28,7 @@ export async function POST(request: Request) {
       },
     });
 
-    // 3. Definimos o conteúdo do e-mail
+    //cont do email
     const mailOptions = {
       from: `"SIAC UTFPR" <${process.env.EMAIL_USER}>`,
       to: email,
@@ -47,7 +46,7 @@ export async function POST(request: Request) {
       `,
     };
 
-    // 4. Enviamos de fato
+    //envio o email
     await transporter.sendMail(mailOptions);
 
     return NextResponse.json({ message: 'Email enviado com sucesso!' });

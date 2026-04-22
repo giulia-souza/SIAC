@@ -25,7 +25,11 @@ export async function POST(request: Request) {
         },
         });
 
-        return NextResponse.json(novoUsuario, { status: 201 }); // retorno o usuario novo
+        return NextResponse.json
+        (
+            { message: 'Usuário criado com sucesso!', user: novoUsuario }, 
+            { status: 201 }
+        ); // retorno o usuario novo
 
     }
     catch (error: any) {

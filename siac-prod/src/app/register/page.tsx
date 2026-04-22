@@ -2,62 +2,80 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { 
+  UserPlus, 
   Mail, 
   Lock, 
+  User, 
+  Shield, 
+  ArrowLeft, 
+  Loader2, 
   Microscope, 
   Beaker, 
-  ShieldCheck, 
-  ArrowLeft, 
-  Loader2 
+  ShieldCheck 
 } from 'lucide-react';
 
-export default function LoginPage() {
+export default function CadastroPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    nome: '',
+    email: '',
+    senha: '',
+    regra: 'ESTUDANTE'
+  });
+
   const [status, setStatus] = useState<{ type: 'sucesso' | 'erro' | null, mensagem: string }>({
     type: null,
     mensagem: ''
   });
   const [carregando, setCarregando] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setCarregando(true);
     setStatus({ type: null, mensagem: '' });
 
     try {
-      const response = await fetch('/api/usuario/login', {
+      const dadosParaEnviar = {
+        nome: formData.nome,
+        email: formData.email,
+        password: formData.senha,
+        regra: formData.regra
+      };
+
+      const response = await fetch('/api/usuario/user_cadastro', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(dadosParaEnviar),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        const { user } = data;
-        // Armazena a sessão no cookie
-        Cookies.set('siac_session', JSON.stringify(user), { expires: 1 });
 
-        setStatus({ type: 'sucesso', mensagem: `Bem-vinda, ${user.nome}!` });
+        setStatus({ 
+          type: 'sucesso', 
+          mensagem: data.message || 'Cadastro realizado com sucesso!' 
+        });
 
-        // Redirecionamento baseado na regra do usuário
+        setFormData({ nome: '', email: '', senha: '', regra: 'ESTUDANTE' });
+
         setTimeout(() => {
-          if (user.regra === 'ADMINISTRADOR') {
-            router.push('/admin/dashboard');
-          } else {
-            router.push('/analise/nova');
-          }
-        }, 1500);
+          router.push('/login');
+        }, 2500);
+
       } else {
-        setStatus({ type: 'erro', mensagem: data.error || 'E-mail ou senha incorretos.' });
+        setStatus({ 
+          type: 'erro', 
+          mensagem: data.error || 'Erro ao realizar cadastro.' 
+        });
       }
     } catch (error) {
-      setStatus({ type: 'erro', mensagem: 'Erro de conexão com o servidor.' });
+      setStatus({ 
+        type: 'erro', 
+        mensagem: 'Erro de conexão com o servidor.' 
+      });
     } finally {
       setCarregando(false);
     }
@@ -89,53 +107,71 @@ export default function LoginPage() {
                <div className="text-blue-600 flex-shrink-0"><Microscope size={48} /></div>
                <div>
                   <div className="bg-blue-50 text-blue-700 px-4 py-1 rounded-full text-sm font-bold mb-2 inline-block">
-                    SAGI - LABS
+                    UTFPR - Campus Curitiba
                   </div>
                   <h1 className="text-4xl font-extrabold text-gray-900 mb-2 tracking-tight">
-                     Bem-vindo ao <br />
-                     <span className="text-blue-600 font-medium italic">SIAC</span>
+                     Junte-se ao <br />
+                     <span className="text-blue-600 font-medium italic">SAGI LABS</span>
                    </h1>
                </div>
              </div>
             <p className="text-gray-500 max-w-lg mb-8 text-lg leading-relaxed">
-              Sistema de Identificação e Análise de Colônias. Transformando a microbiologia 
-              com tecnologia de ponta para pesquisadores e estudantes. Acesse sua conta.
+              Crie sua conta para começar a utilizar nossa plataforma de identificação e análise de colônias. 
+              Acesso exclusivo para a comunidade acadêmica.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8 max-w-lg w-full">
               <div className="p-5 text-left bg-gray-50 rounded-2xl border border-gray-100">
                 <div className="text-blue-600 mb-3"><Beaker size={24} /></div>
-                <h3 className="font-bold text-gray-800 mb-1 text-sm">Análise Prática</h3>
-                <p className="text-xs text-gray-500">Gestão centralizada de análises e históricos no laboratório.</p>
+                <h3 className="font-bold text-gray-800 mb-1 text-sm">Pesquisa Digital</h3>
+                <p className="text-xs text-gray-500">Transforme seus resultados laboratoriais em dados estruturados.</p>
               </div>
               <div className="p-5 text-left bg-gray-50 rounded-2xl border border-gray-100">
                 <div className="text-blue-600 mb-3"><ShieldCheck size={24} /></div>
-                <h3 className="font-bold text-gray-800 mb-1 text-sm">Segurança Institucional</h3>
-                <p className="text-xs text-gray-500">Autenticação segura seguindo padrões UTFPR.</p>
+                <h3 className="font-bold text-gray-800 mb-1 text-sm">Privacidade</h3>
+                <p className="text-xs text-gray-500">Seus experimentos e análises protegidos e criptografados.</p>
               </div>
             </div>
           </div>
 
           {/* Seção do Formulário (Direita) */}
-          <div className="w-full lg:w-[450px] flex-shrink-0 flex flex-col items-center lg:items-start p-10 bg-gray-50 rounded-3xl border border-gray-100">
+          <div className="w-full lg:w-[480px] flex-shrink-0 flex flex-col items-center lg:items-start p-10 bg-gray-50 rounded-3xl border border-gray-100">
             
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">Acessar Conta</h2>
-            <p className="text-gray-500 mb-10 text-lg leading-relaxed">Faça seu login para iniciar a análise.</p>
+            <h2 className="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">Criar Conta</h2>
+            <p className="text-gray-500 mb-8 text-lg leading-relaxed">Preencha os dados abaixo para se cadastrar.</p>
             
-            <form onSubmit={handleLogin} className="w-full flex flex-col gap-6">
+            <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5">
+              
+              {/* Campo Nome */}
+              <div className="flex flex-col gap-2">
+                <label className="font-medium text-gray-700 text-sm pl-1">Nome Completo</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400">
+                    <User size={20} />
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    value={formData.nome}
+                    onChange={(e) => setFormData({...formData, nome: e.target.value})}
+                    placeholder="Seu nome completo"
+                    className="w-full pl-14 pr-6 py-4 rounded-xl border border-gray-200 bg-white text-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition outline-none"
+                  />
+                </div>
+              </div>
+
               {/* Campo E-mail */}
               <div className="flex flex-col gap-2">
-                <label htmlFor="email" className="font-medium text-gray-700 text-sm pl-1">E-mail Institucional</label>
+                <label className="font-medium text-gray-700 text-sm pl-1">E-mail Institucional</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400">
                     <Mail size={20} />
                   </div>
                   <input
-                    id="email"
                     type="email"
                     required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
                     placeholder="exemplo@utfpr.edu.br"
                     className="w-full pl-14 pr-6 py-4 rounded-xl border border-gray-200 bg-white text-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition outline-none"
                   />
@@ -144,32 +180,40 @@ export default function LoginPage() {
 
               {/* Campo Senha */}
               <div className="flex flex-col gap-2">
-                <div className="flex justify-between items-center pl-1">
-                  <label htmlFor="password" className="font-medium text-gray-700 text-sm">Senha</label>
-                  <Link 
-                    href="/forgot-password" 
-                    className="text-xs font-medium text-blue-600 hover:text-blue-700 transition"
-                  >
-                    Esqueceu sua senha?
-                  </Link>
-                </div>
+                <label className="font-medium text-gray-700 text-sm pl-1">Senha</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400">
                     <Lock size={20} />
                   </div>
                   <input
-                    id="password"
                     type="password"
                     required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Sua senha segura"
+                    value={formData.senha}
+                    onChange={(e) => setFormData({...formData, senha: e.target.value})}
+                    placeholder="••••••••"
                     className="w-full pl-14 pr-6 py-4 rounded-xl border border-gray-200 bg-white text-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition outline-none"
                   />
                 </div>
               </div>
 
-              {/* Mensagem de Feedback */}
+              {/* Campo Tipo de Usuário */}
+              <div className="flex flex-col gap-2">
+                <label className="font-medium text-gray-700 text-sm pl-1">Tipo de Usuário</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400">
+                    <Shield size={20} />
+                  </div>
+                  <select
+                    value={formData.regra}
+                    onChange={(e) => setFormData({...formData, regra: e.target.value})}
+                    className="w-full pl-14 pr-6 py-4 rounded-xl border border-gray-200 bg-white text-gray-800 appearance-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition outline-none cursor-pointer"
+                  >
+                    <option value="ESTUDANTE">Estudante</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Mensagem de Status */}
               {status.mensagem && (
                 <div className={`p-4 rounded-xl text-sm font-medium border ${
                   status.type === 'sucesso' 
@@ -180,27 +224,27 @@ export default function LoginPage() {
                 </div>
               )}
 
-              {/* Botão Login */}
+              {/* Botão Submit */}
               <button 
                 type="submit" 
                 disabled={carregando}
-                className={`flex items-center justify-center gap-3 w-full text-white px-8 py-4 rounded-xl font-bold transition shadow-lg text-lg ${
+                className={`flex items-center justify-center gap-3 w-full text-white px-8 py-4 rounded-xl font-bold transition shadow-lg text-lg mt-2 ${
                   carregando 
                     ? 'bg-gray-400 cursor-not-allowed' 
                     : 'bg-gray-900 hover:bg-black active:scale-[0.98]'
                 }`}
               >
                 {carregando ? (
-                  <><Loader2 className="animate-spin" size={20} /> Verificando...</>
+                  <><Loader2 className="animate-spin" size={20} /> Criando...</>
                 ) : (
-                  <>Acessar Painel</>
+                  <><UserPlus size={20} /> Criar minha conta</>
                 )}
               </button>
 
               <div className="text-center w-full mt-4">
-                <span className="text-sm text-gray-500">Ainda não tem conta?</span>{' '}
-                <Link href="/register" className="text-sm font-bold text-blue-600 hover:text-blue-700 transition">
-                  Cadastre-se aqui
+                <span className="text-sm text-gray-500">Já tem uma conta?</span>{' '}
+                <Link href="/login" className="text-sm font-bold text-blue-600 hover:text-blue-700 transition">
+                  Fazer Login
                 </Link>
               </div>
             </form>

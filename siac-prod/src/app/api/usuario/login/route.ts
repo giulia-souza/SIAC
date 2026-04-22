@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
 
-    // 1. Validar se os campos foram preenchidos
+    //validacao se os campos foram preenchidos
     if (!email || !password) {
       return NextResponse.json(
         { error: 'E-mail e senha são obrigatórios.' },
@@ -13,13 +13,13 @@ export async function POST(request: Request) {
       );
     }
 
-    // 2. Buscar o usuário no banco
+    //busco no banco o usuario com o email fornecido
     const usuario = await prisma.usuario.findUnique({
       where: { email },
     });
 
-    // 3. Verificar se o usuário existe e se a senha está correta
-    // OBS: Se estiver usando bcrypt, use: await bcyrpt.compare(password, usuario.password)
+    
+    //qndo usar bcrypt - await bcyrpt.compare(password, usuario.password)
     if (!usuario || usuario.password !== password) {
       return NextResponse.json(
         { error: 'E-mail ou senha inválidos.' },
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 4. Retornar os dados do usuário (exceto a senha por segurança)
+    //retornar os dados do usuário
     const { password: _, ...userWithoutPassword } = usuario;
 
     return NextResponse.json({

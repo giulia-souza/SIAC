@@ -5,12 +5,12 @@ export async function POST(request: Request) {
   try {
     const { token, novaSenha } = await request.json();
 
-    // 1. Procura o usuário que tenha esse token e que não esteja expirado
+    //procuro o user que tenha esse token e que não esteja expirado
     const usuario = await prisma.usuario.findFirst({
       where: {
         resetToken: token,
         resetTokenExpires: {
-          gt: new Date(), // Verifica se a data de expiração é maior que 'agora'
+          gt: new Date(), //verif se a data de exp é maior que agr
         },
       },
     });
@@ -22,12 +22,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // 2. Atualiza a senha e LIMPA o token para não ser usado de novo
+    //Atualiza a senha e LIMPA o token para não ser usado de novo
     await prisma.usuario.update({
       where: { id: usuario.id },
       data: {
-        password: novaSenha, // Lembre-se: em produção, use bcrypt aqui!
-        resetToken: null,    // Limpa o token (aquele '?' que usamos no Prisma)
+        password: novaSenha, //bcrypt aqui
+        resetToken: null,   
         resetTokenExpires: null,
       },
     });
