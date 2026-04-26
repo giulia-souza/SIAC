@@ -40,12 +40,10 @@ export default function LoginPage() {
 
       if (response.ok) {
         const { user } = data;
-        // Armazena a sessão no cookie
+  
         Cookies.set('siac_session', JSON.stringify(user), { expires: 1 });
-
         setStatus({ type: 'sucesso', mensagem: `Bem-vinda, ${user.nome}!` });
 
-        // Redirecionamento baseado na regra do usuário
         setTimeout(() => {
           if (user.regra === 'ADMINISTRADOR') {
             router.push('/admin/dashboard');
@@ -65,7 +63,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans">
-      {/* Navbar Minimalista */}
+      
       <nav className="p-6 border-b border-gray-100 flex justify-between items-center max-w-7xl mx-auto w-full">
         <div className="flex items-center gap-2">
           <div className="bg-blue-900 text-white p-2 rounded-lg font-bold">SIAC</div>
@@ -79,11 +77,9 @@ export default function LoginPage() {
         </Link>
       </nav>
 
-      {/* Conteúdo Principal */}
       <main className="flex-1 flex items-center justify-center p-6 bg-gray-50">
         <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 p-10 bg-white rounded-3xl shadow-xl border border-gray-100 items-center">
           
-          {/* Seção de Contexto (Esquerda) */}
           <div className="flex flex-col items-start lg:items-start text-center lg:text-left gap-6 flex-1 lg:pr-10">
              <div className="flex items-center gap-4 text-left justify-start self-start">
                <div className="text-blue-600 flex-shrink-0"><Microscope size={48} /></div>
@@ -116,14 +112,13 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Seção do Formulário (Direita) */}
           <div className="w-full lg:w-[450px] flex-shrink-0 flex flex-col items-center lg:items-start p-10 bg-gray-50 rounded-3xl border border-gray-100">
             
             <h2 className="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">Acessar Conta</h2>
             <p className="text-gray-500 mb-10 text-lg leading-relaxed">Faça seu login para iniciar a análise.</p>
             
             <form onSubmit={handleLogin} className="w-full flex flex-col gap-6">
-              {/* Campo E-mail */}
+
               <div className="flex flex-col gap-2">
                 <label htmlFor="email" className="font-medium text-gray-700 text-sm pl-1">E-mail Institucional</label>
                 <div className="relative">
@@ -142,7 +137,6 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {/* Campo Senha */}
               <div className="flex flex-col gap-2">
                 <div className="flex justify-between items-center pl-1">
                   <label htmlFor="password" className="font-medium text-gray-700 text-sm">Senha</label>
@@ -169,7 +163,6 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {/* Mensagem de Feedback */}
               {status.mensagem && (
                 <div className={`p-4 rounded-xl text-sm font-medium border ${
                   status.type === 'sucesso' 
@@ -180,7 +173,6 @@ export default function LoginPage() {
                 </div>
               )}
 
-              {/* Botão Login */}
               <button 
                 type="submit" 
                 disabled={carregando}
@@ -208,7 +200,6 @@ export default function LoginPage() {
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="p-8 border-t border-gray-100 text-center text-gray-400 text-sm">
         © 2026 SIAC - UTFPR. Desenvolvido por SAGI LABS
       </footer>

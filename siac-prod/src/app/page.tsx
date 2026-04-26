@@ -59,11 +59,11 @@ export default function HomePage() {
           <div className="p-6 text-left">
             <div className="text-blue-600 mb-4"><Beaker size={32} /></div>
             <h3 className="font-bold text-gray-800 mb-2">Gestão de Laboratório</h3>
-            <p className="text-sm text-gray-500 text-balance">Controle total de usuários e históricos de análises feitas no SAGI LABS.</p>
+            <p className="text-sm text-gray-500 text-balance">Controle total de usuários e históricos de análises feitas no SIAC.</p>
           </div>
           <div className="p-6 text-left">
             <div className="text-blue-600 mb-4"><ShieldCheck size={32} /></div>
-            <h3 className="font-bold text-gray-800 mb-2">Segurança UTFPR</h3>
+            <h3 className="font-bold text-gray-800 mb-2">Segurança</h3>
             <p className="text-sm text-gray-500 text-balance">Autenticação segura e proteção de dados seguindo padrões institucionais.</p>
           </div>
         </div>

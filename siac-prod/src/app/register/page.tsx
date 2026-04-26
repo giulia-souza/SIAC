@@ -83,7 +83,6 @@ export default function CadastroPage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans">
-      {/* Navbar Minimalista */}
       <nav className="p-6 border-b border-gray-100 flex justify-between items-center max-w-7xl mx-auto w-full">
         <div className="flex items-center gap-2">
           <div className="bg-blue-900 text-white p-2 rounded-lg font-bold">SIAC</div>
@@ -97,11 +96,9 @@ export default function CadastroPage() {
         </Link>
       </nav>
 
-      {/* Conteúdo Principal */}
       <main className="flex-1 flex items-center justify-center p-6 bg-gray-50">
         <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 p-10 bg-white rounded-3xl shadow-xl border border-gray-100 items-center">
           
-          {/* Seção de Contexto (Esquerda) */}
           <div className="flex flex-col items-start lg:items-start text-center lg:text-left gap-6 flex-1 lg:pr-10">
              <div className="flex items-center gap-4 text-left justify-start self-start">
                <div className="text-blue-600 flex-shrink-0"><Microscope size={48} /></div>
@@ -111,7 +108,7 @@ export default function CadastroPage() {
                   </div>
                   <h1 className="text-4xl font-extrabold text-gray-900 mb-2 tracking-tight">
                      Junte-se ao <br />
-                     <span className="text-blue-600 font-medium italic">SAGI LABS</span>
+                     <span className="text-blue-600 font-medium italic">SIAC</span>
                    </h1>
                </div>
              </div>
@@ -134,7 +131,6 @@ export default function CadastroPage() {
             </div>
           </div>
 
-          {/* Seção do Formulário (Direita) */}
           <div className="w-full lg:w-[480px] flex-shrink-0 flex flex-col items-center lg:items-start p-10 bg-gray-50 rounded-3xl border border-gray-100">
             
             <h2 className="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">Criar Conta</h2>
@@ -142,7 +138,6 @@ export default function CadastroPage() {
             
             <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5">
               
-              {/* Campo Nome */}
               <div className="flex flex-col gap-2">
                 <label className="font-medium text-gray-700 text-sm pl-1">Nome Completo</label>
                 <div className="relative">
@@ -160,7 +155,6 @@ export default function CadastroPage() {
                 </div>
               </div>
 
-              {/* Campo E-mail */}
               <div className="flex flex-col gap-2">
                 <label className="font-medium text-gray-700 text-sm pl-1">E-mail Institucional</label>
                 <div className="relative">
@@ -178,7 +172,6 @@ export default function CadastroPage() {
                 </div>
               </div>
 
-              {/* Campo Senha */}
               <div className="flex flex-col gap-2">
                 <label className="font-medium text-gray-700 text-sm pl-1">Senha</label>
                 <div className="relative">
@@ -196,7 +189,6 @@ export default function CadastroPage() {
                 </div>
               </div>
 
-              {/* Campo Tipo de Usuário */}
               <div className="flex flex-col gap-2">
                 <label className="font-medium text-gray-700 text-sm pl-1">Tipo de Usuário</label>
                 <div className="relative">
@@ -213,7 +205,6 @@ export default function CadastroPage() {
                 </div>
               </div>
 
-              {/* Mensagem de Status */}
               {status.mensagem && (
                 <div className={`p-4 rounded-xl text-sm font-medium border ${
                   status.type === 'sucesso' 
@@ -224,7 +215,6 @@ export default function CadastroPage() {
                 </div>
               )}
 
-              {/* Botão Submit */}
               <button 
                 type="submit" 
                 disabled={carregando}
@@ -252,7 +242,6 @@ export default function CadastroPage() {
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="p-8 border-t border-gray-100 text-center text-gray-400 text-sm">
         © 2026 SIAC - UTFPR. Desenvolvido por SAGI LABS
       </footer>

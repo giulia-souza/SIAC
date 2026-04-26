@@ -18,7 +18,6 @@ export default function ForgotPasswordPage() {
     setStatus({ type: null, mensagem: '' });
 
     try {
-      //rota POST para enviar o e-mail
       const response = await fetch('/api/usuario/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -32,7 +31,7 @@ export default function ForgotPasswordPage() {
           type: 'sucesso', 
           mensagem: 'Se este e-mail estiver cadastrado, você receberá um link em breve.' 
         });
-        setEmail(''); // Limpa o campo após sucesso
+        setEmail('');
       } else {
         setStatus({ type: 'erro', mensagem: data.error || 'Erro ao processar solicitação.' });
       }
@@ -47,7 +46,6 @@ export default function ForgotPasswordPage() {
     <main className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg border border-gray-100">
         
-        {/* Botão de Voltar */}
         <Link 
           href="/login" 
           className="inline-flex items-center text-sm text-gray-500 hover:text-blue-600 transition-colors mb-6"

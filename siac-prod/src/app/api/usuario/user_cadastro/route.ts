@@ -29,7 +29,7 @@ export async function POST(request: Request) {
         (
             { message: 'Usuário criado com sucesso!', user: novoUsuario }, 
             { status: 201 }
-        ); // retorno o usuario novo
+        );
 
     }
     catch (error: any) {

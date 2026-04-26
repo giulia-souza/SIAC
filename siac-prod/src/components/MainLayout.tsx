@@ -11,7 +11,11 @@ import {
   History, 
   LogOut, 
   Calendar,
-  Loader2
+  Loader2,
+  Lightbulb,
+  ShieldCheck,
+  Database,
+  User
 } from 'lucide-react';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
@@ -44,7 +48,19 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   const isAdmin = usuario.regra === 'ADMINISTRADOR' || usuario.regra === 'PROFESSOR';
 
-  // Componente de link auxiliar para padronizar o menu
+  const getTituloPagina = () => {
+    if (pathname.includes('/admin/bacterias')) return 'Gestão de Microrganismos';
+    if (pathname.includes('/admin/usuarios')) return 'Gestão de Usuários';
+    if (pathname.includes('/admin/sugestoes')) return 'Moderação Científica';
+    if (pathname.includes('/admin/dashboard')) return 'Painel Administrativo';
+    if (pathname.includes('/analise/nova')) return 'Nova Análise';
+    if (pathname.includes('/sugestoes')) return 'Sugerir Atualização';
+    if (pathname.includes('/historico')) return 'Histórico de Análise';
+    if (pathname.includes('/perfil')) return 'Meu Perfil'; // <-- Nova regra adicionada
+    
+    return isAdmin ? 'Painel Administrativo' : 'Área de Análise';
+  };
+
   const NavLink = ({ href, icon: Icon, label, activeCondition }: { href: string, icon: any, label: string, activeCondition: boolean }) => (
     <Link 
       href={href} 
@@ -60,12 +76,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   );
 
   return (
-    <div className="flex h-screen bg-gray-50 font-sans overflow-hidden">
+    <div className="flex h-screen bg-[#f8fafc] font-sans overflow-hidden">
       
-      {/* Sidebar Lateral */}
-      <aside className="w-72 bg-blue-900 text-white flex flex-col shadow-2xl z-10">
+      <aside className="w-72 bg-blue-900 text-white flex flex-col shadow-2xl z-20 relative">
         
-        {/* Logo / Header da Sidebar */}
         <div className="p-8 border-b border-blue-800/50 flex items-center gap-3">
           <div className="bg-blue-600 text-white p-2.5 rounded-xl font-black text-xl shadow-lg">
             SIAC
@@ -76,8 +90,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           </div>
         </div>
         
-        {/* Navegação */}
-        <nav className="flex-1 p-5 space-y-2 overflow-y-auto">
+        <nav className="flex-1 p-5 space-y-2 overflow-y-auto custom-scrollbar">
           <NavLink 
             href={isAdmin ? "/admin/dashboard" : "/analise"} 
             icon={Home} 
@@ -85,7 +98,6 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             activeCondition={pathname === '/admin/dashboard' || pathname === '/analise'} 
           />
           
-          {/* Agora liberado para todos (removida a restrição !isAdmin) */}
           <NavLink 
             href="/analise/nova" 
             icon={Microscope} 
@@ -93,63 +105,105 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             activeCondition={pathname.includes('/analise/nova')} 
           />
 
+          <NavLink 
+            href="/sugestoes" 
+            icon={Lightbulb} 
+            label="Sugerir Atualização"
+            activeCondition={pathname.includes('/sugestoes') && !pathname.includes('admin')} 
+          />
+
           {isAdmin && (
-            <NavLink 
-              href="/admin/usuarios" 
-              icon={Users} 
-              label="Gestão de Usuários"
-              activeCondition={pathname.includes('/usuarios')} 
-            />
+            <>
+              <div className="pt-4 pb-2">
+                <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest px-4">Administração</p>
+              </div>
+
+              <NavLink 
+                href="/admin/bacterias" 
+                icon={Database} 
+                label="Gestão de Microrganismos"
+                activeCondition={pathname.includes('/admin/bacterias')} 
+              />
+
+              <NavLink 
+                href="/admin/usuarios" 
+                icon={Users} 
+                label="Gestão de Usuários"
+                activeCondition={pathname.includes('/usuarios')} 
+              />
+              
+              <NavLink 
+                href="/admin/sugestoes" 
+                icon={ShieldCheck} 
+                label="Moderação Científica"
+                activeCondition={pathname.includes('/admin/sugestoes')} 
+              />
+            </>
           )}
+
+          <div className="pt-4 pb-2">
+            <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest px-4">Registros</p>
+          </div>
 
           <NavLink 
             href="/historico" 
             icon={History} 
-            label="Histórico de Dados"
+            label="Histórico de Análise"
             activeCondition={pathname.includes('/historico')} 
           />
         </nav>
 
-        {/* Rodapé da Sidebar (Perfil e Logout) */}
         <div className="p-6 border-t border-blue-800/50 bg-blue-950/30">
-          <p className="text-[10px] text-blue-400 font-black uppercase tracking-widest mb-1">
+          <p className="text-[10px] text-blue-400 font-black uppercase tracking-widest mb-2">
             Sessão Ativa
           </p>
-          <div className="flex items-center gap-3 mb-5">
-            <div className="h-10 w-10 rounded-full bg-blue-800 flex items-center justify-center font-bold text-white uppercase border border-blue-700">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-10 w-10 rounded-full bg-blue-800 flex items-center justify-center font-black text-white uppercase border border-blue-700 shadow-sm shrink-0">
               {usuario.nome.charAt(0)}
             </div>
             <div className="overflow-hidden">
               <p className="font-bold text-white truncate text-sm leading-tight">{usuario.nome}</p>
-              <p className="text-xs text-blue-300 capitalize">{usuario.regra.toLowerCase()}</p>
+              <p className="text-[11px] font-bold text-blue-300 uppercase tracking-wider mt-0.5">{usuario.regra}</p>
             </div>
           </div>
           
-          <button 
-            onClick={handleLogout}
-            className="flex items-center justify-center gap-2 w-full bg-blue-800/40 hover:bg-red-500 hover:text-white text-blue-200 py-3 rounded-xl text-sm font-bold transition-all group border border-blue-800/50 hover:border-red-500"
-          >
-            <LogOut size={18} className="group-hover:scale-110 transition-transform" />
-            Sair do Sistema
-          </button>
+          <div className="flex flex-col gap-2">
+            <Link 
+              href="/perfil"
+              className={`flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold transition-all border ${
+                pathname.includes('/perfil')
+                  ? 'bg-blue-800/80 text-white border-blue-700 shadow-inner'
+                  : 'bg-transparent hover:bg-blue-800/40 text-blue-200 border-transparent hover:border-blue-800/50'
+              }`}
+            >
+              <User size={16} />
+              Meu Perfil
+            </Link>
+
+            <button 
+              onClick={handleLogout}
+              className="flex items-center justify-center gap-2 w-full bg-blue-800/40 hover:bg-rose-500 hover:text-white text-blue-200 py-2.5 rounded-xl text-sm font-bold transition-all group border border-blue-800/50 hover:border-rose-500"
+            >
+              <LogOut size={16} className="group-hover:scale-110 transition-transform" />
+              Encerrar Sessão
+            </button>
+          </div>
         </div>
       </aside>
 
-      {/* Área Principal de Conteúdo */}
-      <main className="flex-1 overflow-y-auto flex flex-col">
+      <main className="flex-1 overflow-y-auto flex flex-col relative">
         
-        {/* Header Dinâmico de Topo */}
-        <header className="bg-white px-10 py-6 border-b border-gray-100 flex justify-between items-center sticky top-0 z-0 shadow-sm">
+        <header className="bg-white/80 backdrop-blur-md px-10 py-6 border-b border-slate-200 flex justify-between items-center sticky top-0 z-50 shadow-sm">
           <div>
-            <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
-              {pathname.includes('admin') ? 'Painel Administrativo' : 'Área de Análise'}
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+              {getTituloPagina()}
             </h1>
-            <p className="text-sm text-gray-500 font-medium mt-0.5">
+            <p className="text-sm text-slate-500 font-medium mt-0.5">
               Bem-vindo(a) de volta ao ambiente laboratorial.
             </p>
           </div>
           
-          <div className="hidden md:flex items-center gap-2 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-bold text-gray-600 shadow-inner">
+          <div className="hidden md:flex items-center gap-2.5 bg-slate-50 px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-600 shadow-inner">
             <Calendar size={18} className="text-blue-600" />
             <span className="capitalize">
               {new Date().toLocaleDateString('pt-BR', { 
@@ -162,8 +216,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           </div>
         </header>
         
-        {/* Container das Páginas (Children) */}
-        <div className="p-8 flex-1">
+        <div className="p-4 md:p-8 flex-1">
           {children}
         </div>
         

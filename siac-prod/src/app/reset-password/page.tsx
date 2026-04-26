@@ -20,7 +20,6 @@ function ResetPasswordForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validação básica de senha
     if (novaSenha !== confirmarSenha) {
       setStatus({ type: 'erro', mensagem: 'As senhas não coincidem.' });
       return;
@@ -45,7 +44,6 @@ function ResetPasswordForm() {
 
       if (response.ok) {
         setStatus({ type: 'sucesso', mensagem: 'Senha alterada com sucesso! Redirecionando...' });
-        // Redireciona para o login após 3 segundos
         setTimeout(() => router.push('/login'), 3000);
       } else {
         setStatus({ type: 'erro', mensagem: data.error || 'Erro ao redefinir senha.' });
@@ -121,7 +119,6 @@ function ResetPasswordForm() {
   );
 }
 
-// O Next.js exige Suspense ao usar useSearchParams em páginas client-side
 export default function ResetPasswordPage() {
   return (
     <Suspense fallback={<div>Carregando...</div>}>

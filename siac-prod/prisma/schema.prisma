@@ -28,3 +28,69 @@ model Usuario{
   resetToken        String?   @unique
   resetTokenExpires DateTime?
 }
+
+model Bacteria {
+  id_bacteria        Int     @id
+  genero             String
+  especie            String
+  nome_cientifico    String  @unique
+  gram               String
+  morfologia_celular String
+  arranjo            String
+  observacoes        String?
+  fonte              String?
+
+  // Relacionamento: 1 Bactéria tem N Características
+  caracteristicas Caracteristica[]
+
+  //Relacionamento com historico!!!
+  historicos      HistoricoAnalise[]
+
+  @@map("bacterias")
+}
+
+model Caracteristica {
+  id_caracteristica Int    @id @default(autoincrement()) @map("id")
+  categoria         String
+  caracteristica    String
+  valor             String
+  peso              Float
+  tipo_valor        String 
+  fonte             String
+  id_bac            Int    @map("id_bacteria")
+  bacteria          Bacteria @relation(fields: [id_bac], references: [id_bacteria], onDelete: Cascade)
+
+  @@map("caracteristicas")
+}
+
+model HistoricoAnalise {
+  id              Int      @id @default(autoincrement())
+  id_bacteria     Int
+  nome_usuario    String
+  regra_usuario   String
+  data_pesquisa   DateTime @default(now())
+
+  // Relacionamento com a bactéria
+  bacteria        Bacteria @relation(fields: [id_bacteria], references: [id_bacteria], onDelete: Cascade)
+
+  @@map("historico_analises")
+}
+
+model Sugestao {
+  id              Int      @id @default(autoincrement())
+  
+  tipo_sugestao   String   // "NOVA_BACTERIA" ou "CORRECAO"
+  nome_bacteria   String   // Ex: "Streptococcus pneumoniae"
+  
+  dados_propostos String   @db.Text 
+  
+  // estado da curadoria do professor
+  status          String   @default("PENDENTE") // Pode ser "PENDENTE", "APROVADA" ou "REJEITADA"
+  
+  // Quem sugeriu e quando
+  autor_nome      String
+  autor_regra     String   @default("ALUNO")
+  data_envio      DateTime @default(now())
+
+  @@map("sugestoes")
+}
