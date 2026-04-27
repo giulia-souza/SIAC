@@ -38,7 +38,7 @@ export async function POST(request: Request) {
           <h2>Olá, ${usuario.nome}!</h2>
           <p>Você solicitou a recuperação de senha para o SIAC.</p>
           <p>Clique no botão abaixo para criar uma nova senha (válido por 1 hora):</p>
-          <a href="http://localhost:3000/reset-password?token=${token}" 
+          <a href="https://siac-eight.vercel.app/reset-password?token=${token}" 
              style="background: #0070f3; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
             Resetar Senha
           </a>

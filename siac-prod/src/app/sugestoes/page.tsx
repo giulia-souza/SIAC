@@ -128,7 +128,7 @@ export default function SugestoesPage() {
         {sucesso && (
           <div className="mb-6 bg-emerald-50 text-emerald-800 p-4 rounded-2xl border border-emerald-100 flex items-center gap-4 animate-in fade-in duration-300">
             <CheckCircle2 size={20} className="text-emerald-500" />
-            <p className="font-bold text-sm">Perfil enviado com sucesso!</p>
+            <p className="font-bold text-sm">Sugestão enviada com sucesso!</p>
           </div>
         )}
 

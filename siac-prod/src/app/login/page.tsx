@@ -42,7 +42,7 @@ export default function LoginPage() {
         const { user } = data;
   
         Cookies.set('siac_session', JSON.stringify(user), { expires: 1 });
-        setStatus({ type: 'sucesso', mensagem: `Bem-vinda, ${user.nome}!` });
+        setStatus({ type: 'sucesso', mensagem: `Bem-vindo, ${user.nome}!` });
 
         setTimeout(() => {
           if (user.regra === 'ADMINISTRADOR') {
