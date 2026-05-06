@@ -48,7 +48,7 @@ export default function LoginPage() {
           if (user.regra === 'ADMINISTRADOR') {
             router.push('/admin/dashboard');
           } else {
-            router.push('/analise/nova');
+            router.push('/analise');
           }
         }, 1500);
       } else {

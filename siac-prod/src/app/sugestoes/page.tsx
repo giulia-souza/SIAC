@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import MainLayout from '@/components/MainLayout';
 import { 
   Send, Microscope, TestTube2,
-  CheckCircle2, Loader2, Layers, Beaker
+  CheckCircle2, Loader2, Layers, Beaker, AlertCircle
 } from 'lucide-react';
 
 export default function SugestoesPage() {
@@ -20,6 +20,9 @@ export default function SugestoesPage() {
   const [enviando, setEnviando] = useState(false);
   const [sucesso, setSucesso] = useState(false);
   const [erro, setErro] = useState('');
+  
+  // Novo estado para controlar qual campo exato disparou o alerta
+  const [campoErro, setCampoErro] = useState('');
 
   useEffect(() => {
     const session = Cookies.get('siac_session');
@@ -32,6 +35,18 @@ export default function SugestoesPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // ==========================================
+    // FLUXO DE EXCEÇÃO [UC005] - Validação
+    // ==========================================
+    if (!formData.nome_bacteria || formData.nome_bacteria.trim() === '') {
+      setCampoErro('nome_bacteria');
+      setErro('Campos obrigatórios não preenchidos.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    setCampoErro('');
     setEnviando(true);
     setErro('');
     setSucesso(false);
@@ -72,7 +87,6 @@ export default function SugestoesPage() {
     }
   };
 
-  // Aqui está a adição de key={name} para resolver o aviso do React!
   const renderSelect = (name: string, label: string, options: string[]) => (
     <div key={name} className="flex flex-col gap-1.5">
       <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] ml-1">
@@ -90,22 +104,38 @@ export default function SugestoesPage() {
     </div>
   );
 
-  // Aqui também: key={name}
-  const renderInput = (name: string, label: string, placeholder: string, italic = false) => (
-    <div key={name} className="flex flex-col gap-1.5">
-      <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] ml-1">
-        {label}
-      </label>
-      <input 
-        type="text" 
-        name={name} 
-        value={formData[name] || ''} 
-        onChange={handleChange} 
-        placeholder={placeholder}
-        className={`w-full bg-white border border-slate-200 text-slate-700 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-sm font-semibold shadow-sm ${italic ? 'italic font-bold text-blue-900' : ''}`}
-      />
-    </div>
-  );
+  // Input atualizado para suportar a UI de erro do Caso de Uso
+  const renderInput = (name: string, label: string, placeholder: string, italic = false) => {
+    const temErro = campoErro === name;
+
+    return (
+      <div key={name} className="flex flex-col gap-1.5 relative">
+        <label className={`text-[10px] font-black uppercase tracking-[0.1em] ml-1 ${temErro ? 'text-red-500' : 'text-slate-400'}`}>
+          {label}
+        </label>
+        <input 
+          type="text" 
+          name={name} 
+          value={formData[name] || ''} 
+          onChange={(e) => {
+            handleChange(e);
+            if (temErro) setCampoErro(''); // Limpa o aviso vermelho se o usuário começar a preencher
+          }} 
+          placeholder={placeholder}
+          className={`w-full bg-white border text-slate-700 rounded-xl px-4 py-2.5 outline-none transition-all text-sm font-semibold shadow-sm 
+            ${italic ? 'italic font-bold text-blue-900' : ''} 
+            ${temErro ? 'border-red-400 focus:ring-4 focus:ring-red-500/10 focus:border-red-500' : 'border-slate-200 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500'}`}
+        />
+        
+        {/* A mensagem de alerta em vermelho aparecendo sobre o campo faltante */}
+        {temErro && (
+          <span className="text-red-500 text-[10px] font-bold ml-1 animate-in fade-in slide-in-from-top-1">
+            Preencha este campo.
+          </span>
+        )}
+      </div>
+    );
+  };
 
   return (
     <MainLayout>
@@ -125,10 +155,19 @@ export default function SugestoesPage() {
           </div>
         </div>
 
+        {/* Notificação de Sucesso */}
         {sucesso && (
           <div className="mb-6 bg-emerald-50 text-emerald-800 p-4 rounded-2xl border border-emerald-100 flex items-center gap-4 animate-in fade-in duration-300">
             <CheckCircle2 size={20} className="text-emerald-500" />
             <p className="font-bold text-sm">Sugestão enviada com sucesso!</p>
+          </div>
+        )}
+
+        {/* Nova: Notificação de Erro Global (quando falta campo ou dá falha na API) */}
+        {erro && (
+          <div className="mb-6 bg-red-50 text-red-800 p-4 rounded-2xl border border-red-100 flex items-center gap-4 animate-in fade-in duration-300">
+            <AlertCircle size={20} className="text-red-500" />
+            <p className="font-bold text-sm">{erro}</p>
           </div>
         )}
 

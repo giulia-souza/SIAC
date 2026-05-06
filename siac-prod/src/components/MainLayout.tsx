@@ -99,7 +99,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           />
           <div className="pt-4 pb-2 text-[10px] font-black text-blue-400 uppercase tracking-widest px-4">Laboratório</div>
           <NavLink href="/analise/nova" icon={Microscope} label="Nova Análise" activeCondition={pathname.includes('/analise/nova')} />
-          <NavLink href="/sugestoes" icon={Lightbulb} label="Sugerir Cepa" activeCondition={pathname.includes('/sugestoes') && !pathname.includes('admin')} />
+          
+          {/* BOTÃO ESCONDIDO PARA ADMINS E PROFESSORES */}
+          {!isAdmin && (
+            <NavLink href="/sugestoes" icon={Lightbulb} label="Sugerir Cepa" activeCondition={pathname.includes('/sugestoes') && !pathname.includes('admin')} />
+          )}
 
           {isAdmin && (
             <>
