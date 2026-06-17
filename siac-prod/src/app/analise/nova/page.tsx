@@ -15,7 +15,8 @@ import {
   ThermometerSun,
   CheckCircle2,
   Download,
-  Search
+  Search,
+  Check // <- Ícone novo adicionado!
 } from 'lucide-react';
 
 interface Caracteristica {
@@ -102,13 +103,13 @@ function FilterGroup({
   if (!opcoes || opcoes.length === 0) return null;
 
   return (
-    <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-      <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 mb-3">
+    <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+      <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 mb-4">
         <Icon size={14} className="text-blue-500" />
         {titulo}
       </h3>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2.5">
         {opcoes.map((opcao) => {
           const selecionado = filtrosAtuais[categoria] === opcao;
 
@@ -117,12 +118,14 @@ function FilterGroup({
               key={opcao}
               type="button"
               onClick={() => onSelect(categoria, opcao)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all border active:scale-95 ${
+              // O flex e o gap-1.5 arrumam o ícone do lado do texto. A classe 'filtro-selecionado' é o nosso gancho pro CSS do Alto Contraste!
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all border active:scale-95 ${
                 selecionado
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200 filtro-selecionado'
                   : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-blue-300 hover:bg-blue-50'
               }`}
             >
+              {selecionado && <Check size={14} strokeWidth={3} className="shrink-0" />}
               {opcao}
             </button>
           );
@@ -370,17 +373,29 @@ export default function NovaAnalise() {
 
   return (
     <MainLayout>
-      <div className="max-w-6xl mx-auto px-4 pb-20 pt-2 relative z-0">
+      {/* Injeção de CSS específica desta página!
+        Ele força os botões selecionados a ganharem uma cor vibrante (cyan) no Modo Alto Contraste 
+      */}
+      <style>{`
+        .alto-contraste .conteudo-dinamico button.filtro-selecionado {
+          background-color: #38bdf8 !important; /* Azul cyan brilhante */
+          color: #0f172a !important; /* Texto bem escuro para facilitar a leitura */
+          border-color: #bae6fd !important;
+        }
+      `}</style>
+
+      {/* Container horizontalmente expandido com max-w-[1600px] */}
+      <div className="w-full max-w-[1600px] mx-auto px-6 md:px-12 pb-24 pt-4 relative z-0">
         
-        <div className="mb-8 mt-2 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="mb-10 mt-2 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 bg-blue-600 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest mb-3 shadow-sm">
+            <div className="inline-flex items-center gap-2 bg-blue-600 text-white px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest mb-4 shadow-sm">
               <Microscope size={10} /> Laboratório Virtual
             </div>
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+            <h1 className="text-4xl font-black text-slate-900 tracking-tight leading-tight">
               Identificação de <span className="text-blue-600">Cepa</span>
             </h1>
-            <p className="text-slate-500 mt-1 text-sm font-medium">
+            <p className="text-slate-500 mt-2 text-base font-medium">
               Filtre as bactérias cruzando dados fenotípicos e bioquímicos.
             </p>
           </div>
@@ -388,35 +403,36 @@ export default function NovaAnalise() {
           <button
             type="button"
             onClick={limparFiltros}
-            className="flex items-center gap-2 bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50 px-5 py-3 rounded-2xl font-bold text-sm shadow-sm transition-all active:scale-95 shrink-0"
+            className="flex items-center gap-2 bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50 px-6 py-3.5 rounded-2xl font-bold text-sm shadow-sm transition-all active:scale-95 shrink-0"
           >
-            <RotateCcw size={16} />
+            <RotateCcw size={18} />
             Limpar Filtros
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 relative items-start">
+        {/* Espaçamento generoso (gap-8) entre a área de filtros e a barra de resultados */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 relative items-start">
           
-          <div className="lg:col-span-3 space-y-8">
+          <div className="lg:col-span-3 space-y-10">
             
-            <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 p-6 md:p-8">
-              <div className="flex items-center gap-3 border-b border-slate-100 pb-4 mb-6">
-                <div className="p-2 bg-indigo-50 rounded-lg text-indigo-500"><Microscope size={18} /></div>
-                <h2 className="text-[11px] font-black text-slate-700 uppercase tracking-[0.2em]">Microscopia</h2>
+            <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 p-8 md:p-10">
+              <div className="flex items-center gap-3 border-b border-slate-100 pb-5 mb-8">
+                <div className="p-3 bg-indigo-50 rounded-xl text-indigo-500"><Microscope size={20} /></div>
+                <h2 className="text-xs font-black text-slate-700 uppercase tracking-[0.2em]">Microscopia</h2>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <FilterGroup titulo="Coloração de Gram" icone={Layers} categoria="gram" opcoes={opcoesDinamicas.gram} filtrosAtuais={filtros} onSelect={selecionarFiltro} />
                 <FilterGroup titulo="Morfologia Celular" icone={Dna} categoria="morfologia_celular" opcoes={opcoesDinamicas.morfologia_celular} filtrosAtuais={filtros} onSelect={selecionarFiltro} />
                 <FilterGroup titulo="Arranjo Celular" icone={Activity} categoria="arranjo" opcoes={opcoesDinamicas.arranjo} filtrosAtuais={filtros} onSelect={selecionarFiltro} />
               </div>
             </div>
             
-            <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 p-6 md:p-8">
-              <div className="flex items-center gap-3 border-b border-slate-100 pb-4 mb-6">
-                <div className="p-2 bg-pink-50 rounded-lg text-pink-500"><Layers size={18} /></div>
-                <h2 className="text-[11px] font-black text-slate-700 uppercase tracking-[0.2em]">Características da Colônia</h2>
+            <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 p-8 md:p-10">
+              <div className="flex items-center gap-3 border-b border-slate-100 pb-5 mb-8">
+                <div className="p-3 bg-pink-50 rounded-xl text-pink-500"><Layers size={20} /></div>
+                <h2 className="text-xs font-black text-slate-700 uppercase tracking-[0.2em]">Características da Colônia</h2>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
                 <FilterGroup titulo="Hemólise" icone={Activity} categoria="hemolise" opcoes={opcoesDinamicas.hemolise} filtrosAtuais={filtros} onSelect={selecionarFiltro} />
                 <FilterGroup titulo="Cor da Colônia" icone={Activity} categoria="cor_colonia" opcoes={opcoesDinamicas.cor_colonia} filtrosAtuais={filtros} onSelect={selecionarFiltro} />
                 <FilterGroup titulo="Pigmento" icone={Activity} categoria="pigmento" opcoes={opcoesDinamicas.pigmento} filtrosAtuais={filtros} onSelect={selecionarFiltro} />
@@ -428,12 +444,12 @@ export default function NovaAnalise() {
               </div>
             </div>
 
-            <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 p-6 md:p-8">
-              <div className="flex items-center gap-3 border-b border-slate-100 pb-4 mb-6">
-                <div className="p-2 bg-emerald-50 rounded-lg text-emerald-500"><TestTube2 size={18} /></div>
-                <h2 className="text-[11px] font-black text-slate-700 uppercase tracking-[0.2em]">Testes Bioquímicos Essenciais</h2>
+            <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 p-8 md:p-10">
+              <div className="flex items-center gap-3 border-b border-slate-100 pb-5 mb-8">
+                <div className="p-3 bg-emerald-50 rounded-xl text-emerald-500"><TestTube2 size={20} /></div>
+                <h2 className="text-xs font-black text-slate-700 uppercase tracking-[0.2em]">Testes Bioquímicos Essenciais</h2>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
                 <FilterGroup titulo="Catalase" icone={TestTube2} categoria="catalase" opcoes={opcoesDinamicas.catalase} filtrosAtuais={filtros} onSelect={selecionarFiltro} />
                 <FilterGroup titulo="Coagulase" icone={TestTube2} categoria="coagulase" opcoes={opcoesDinamicas.coagulase} filtrosAtuais={filtros} onSelect={selecionarFiltro} />
                 <FilterGroup titulo="Oxidase" icone={TestTube2} categoria="oxidase" opcoes={opcoesDinamicas.oxidase} filtrosAtuais={filtros} onSelect={selecionarFiltro} />
@@ -449,12 +465,12 @@ export default function NovaAnalise() {
               </div>
             </div>
 
-            <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 p-6 md:p-8">
-              <div className="flex items-center gap-3 border-b border-slate-100 pb-4 mb-6">
-                <div className="p-2 bg-orange-50 rounded-lg text-orange-500"><ThermometerSun size={18} /></div>
-                <h2 className="text-[11px] font-black text-slate-700 uppercase tracking-[0.2em]">Crescimento e Coloração</h2>
+            <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 p-8 md:p-10">
+              <div className="flex items-center gap-3 border-b border-slate-100 pb-5 mb-8">
+                <div className="p-3 bg-orange-50 rounded-xl text-orange-500"><ThermometerSun size={20} /></div>
+                <h2 className="text-xs font-black text-slate-700 uppercase tracking-[0.2em]">Crescimento e Coloração</h2>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
                 <FilterGroup titulo="Atmosfera" icone={ThermometerSun} categoria="atmosfera" opcoes={opcoesDinamicas.atmosfera} filtrosAtuais={filtros} onSelect={selecionarFiltro} />
                 <FilterGroup titulo="Anaeróbio" icone={ThermometerSun} categoria="crescimento_anaerobio" opcoes={opcoesDinamicas.crescimento_anaerobio} filtrosAtuais={filtros} onSelect={selecionarFiltro} />
                 <FilterGroup titulo="Meio Específico" icone={ThermometerSun} categoria="meio_especifico" opcoes={opcoesDinamicas.meio_especifico} filtrosAtuais={filtros} onSelect={selecionarFiltro} />
@@ -468,47 +484,47 @@ export default function NovaAnalise() {
           </div>
 
           <div className="lg:col-span-1 sticky top-28 self-start">
-            <div className="bg-gradient-to-b from-blue-900 to-indigo-900 rounded-[2rem] p-6 shadow-2xl shadow-blue-900/20 border border-blue-800/50 text-white flex flex-col max-h-[calc(100vh-140px)]">
+            <div className="bg-gradient-to-b from-blue-900 to-indigo-900 rounded-[2rem] p-8 shadow-2xl shadow-blue-900/20 border border-blue-800/50 text-white flex flex-col max-h-[calc(100vh-140px)]">
               
-              <div className="flex items-center gap-3 border-b border-blue-800/50 pb-4 mb-4 shrink-0">
-                <div className="p-2 bg-blue-800 rounded-lg text-blue-300 shadow-inner"><Search size={18} /></div>
+              <div className="flex items-center gap-4 border-b border-blue-800/50 pb-5 mb-5 shrink-0">
+                <div className="p-3 bg-blue-800 rounded-xl text-blue-300 shadow-inner"><Search size={22} /></div>
                 <div>
-                  <h2 className="text-lg font-black tracking-tight leading-tight">Resultados</h2>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-blue-300">
+                  <h2 className="text-xl font-black tracking-tight leading-tight">Resultados</h2>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-blue-300 mt-1">
                     {resultados.length} cepa(s) compatível(is)
                   </p>
                 </div>
               </div>
 
               {carregando ? (
-                <div className="flex flex-col items-center justify-center py-12 text-blue-400">
-                  <Loader2 size={40} className="animate-spin mb-4" />
-                  <p className="font-bold text-[10px] uppercase tracking-widest">Consultando base...</p>
+                <div className="flex flex-col items-center justify-center py-16 text-blue-400">
+                  <Loader2 size={48} className="animate-spin mb-5" />
+                  <p className="font-bold text-xs uppercase tracking-widest">Consultando base...</p>
                 </div>
               ) : (
                 <>
-                  <div className="space-y-3 overflow-y-auto pr-2 custom-scrollbar flex-1 min-h-[200px]">
+                  <div className="space-y-3 overflow-y-auto pr-2 custom-scrollbar flex-1 min-h-[250px]">
                     {resultados.length === 0 ? (
-                      <div className="bg-blue-950/40 p-6 rounded-2xl text-center border border-blue-800/30 h-full flex flex-col items-center justify-center">
-                        <AlertCircle size={32} className="text-blue-400 mx-auto mb-3 opacity-50" />
-                        <p className="font-bold text-blue-200 text-sm">Sem correspondência</p>
-                        <p className="text-xs text-blue-400 mt-1">Revise os filtros aplicados</p>
+                      <div className="bg-blue-950/40 p-8 rounded-2xl text-center border border-blue-800/30 h-full flex flex-col items-center justify-center">
+                        <AlertCircle size={40} className="text-blue-400 mx-auto mb-4 opacity-50" />
+                        <p className="font-bold text-blue-200 text-base">Sem correspondência</p>
+                        <p className="text-sm text-blue-400 mt-1">Revise os filtros aplicados</p>
                       </div>
                     ) : (
-                      <div className="space-y-3 pb-2">
+                      <div className="space-y-4 pb-2">
                         {resultados.map((bact) => (
                           <div
                             key={bact.id}
-                            className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 p-4 rounded-2xl shadow-lg transition-all cursor-pointer group"
+                            className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 p-5 rounded-2xl shadow-lg transition-all cursor-pointer group"
                           >
-                            <h3 className="font-black italic text-[15px] group-hover:text-blue-300 transition-colors mb-3 leading-tight">
+                            <h3 className="font-black italic text-base group-hover:text-blue-300 transition-colors mb-3.5 leading-tight">
                               {bact.nome}
                             </h3>
-                            <div className="flex flex-wrap gap-1.5">
-                              <span className="bg-blue-950/50 text-blue-200 px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest">
+                            <div className="flex flex-wrap gap-2">
+                              <span className="bg-blue-950/50 text-blue-200 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest">
                                 Gram {bact.gram}
                               </span>
-                              <span className="bg-blue-950/50 text-blue-200 px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest">
+                              <span className="bg-blue-950/50 text-blue-200 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest">
                                 {bact.morfologia_celular}
                               </span>
                             </div>
@@ -519,10 +535,10 @@ export default function NovaAnalise() {
                   </div>
 
                   {resultados.length === 1 && (
-                    <div className="mt-6 pt-5 border-t border-blue-800/50 flex flex-col gap-3 shrink-0">
+                    <div className="mt-8 pt-6 border-t border-blue-800/50 flex flex-col gap-4 shrink-0">
                       {sucesso ? (
-                        <div className="bg-emerald-500 text-white font-black uppercase tracking-widest text-[10px] py-4 rounded-2xl shadow-xl flex items-center justify-center gap-2 animate-in fade-in zoom-in duration-300">
-                          <CheckCircle2 size={16} />
+                        <div className="bg-emerald-500 text-white font-black uppercase tracking-widest text-[11px] py-4.5 rounded-2xl shadow-xl flex items-center justify-center gap-3 animate-in fade-in zoom-in duration-300">
+                          <CheckCircle2 size={18} />
                           Identificação Registrada!
                         </div>
                       ) : (
@@ -530,16 +546,16 @@ export default function NovaAnalise() {
                           type="button"
                           onClick={() => confirmarIdentificacao(resultados[0].id)}
                           disabled={salvando}
-                          className="w-full bg-blue-500 hover:bg-blue-400 disabled:bg-blue-800 text-white font-black uppercase tracking-widest text-[10px] py-4 rounded-2xl shadow-xl shadow-blue-900/40 transition-all active:scale-95 flex items-center justify-center gap-2"
+                          className="w-full bg-blue-500 hover:bg-blue-400 disabled:bg-blue-800 text-white font-black uppercase tracking-widest text-[11px] py-4.5 rounded-2xl shadow-xl shadow-blue-900/40 transition-all active:scale-95 flex items-center justify-center gap-3"
                         >
                           {salvando ? (
                             <>
-                              <Loader2 size={16} className="animate-spin" />
+                              <Loader2 size={18} className="animate-spin" />
                               A Guardar...
                             </>
                           ) : (
                             <>
-                              <CheckCircle2 size={16} />
+                              <CheckCircle2 size={18} />
                               Confirmar Identificação
                             </>
                           )}
@@ -550,16 +566,16 @@ export default function NovaAnalise() {
                         type="button"
                         onClick={gerarPDF}
                         disabled={gerandoPDF}
-                        className="w-full bg-white/10 hover:bg-white/20 text-white font-black uppercase tracking-widest text-[10px] py-3.5 rounded-2xl border border-white/20 transition-all active:scale-95 flex items-center justify-center gap-2"
+                        className="w-full bg-white/10 hover:bg-white/20 text-white font-black uppercase tracking-widest text-[11px] py-4 rounded-2xl border border-white/20 transition-all active:scale-95 flex items-center justify-center gap-3"
                       >
                         {gerandoPDF ? (
                           <>
-                            <Loader2 size={16} className="animate-spin" />
+                            <Loader2 size={18} className="animate-spin" />
                             A Gerar PDF...
                           </>
                         ) : (
                           <>
-                            <Download size={16} />
+                            <Download size={18} />
                             Baixar Ficha (PDF)
                           </>
                         )}

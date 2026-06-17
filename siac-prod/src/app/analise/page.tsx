@@ -90,7 +90,8 @@ export default function StudentDashboard() {
 
   return (
     <MainLayout>
-      <div className="max-w-6xl mx-auto px-4 pb-20 pt-2">
+      {/* Container expandido horizontalmente para ocupar o novo espaço livre */}
+      <div className="w-full max-w-[1600px] mx-auto px-6 md:px-12 pb-24 pt-4">
         
         <div className="mb-10 mt-2 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
@@ -110,17 +111,17 @@ export default function StudentDashboard() {
         </div>
 
         {carregando ? (
-          <div className="flex flex-col items-center justify-center py-24 text-slate-400 bg-white rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/60">
+          <div className="flex flex-col items-center justify-center py-24 text-slate-400 bg-white rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/60 w-full">
             <Loader2 size={40} className="animate-spin mb-4 text-blue-500" />
             <p className="font-bold text-sm uppercase tracking-widest">Sincronizando seu diário...</p>
           </div>
         ) : (
-          <div className="space-y-10">
+          <div className="space-y-10 w-full">
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {metricasPessoais.length > 0 ? (
                 metricasPessoais.map((item, index) => (
-                  <div key={index} className={`p-6 rounded-[2rem] shadow-xl transition-all duration-300 flex flex-col justify-center gap-4 ${
+                  <div key={index} className={`px-8 py-10 rounded-[2rem] shadow-xl transition-all duration-300 flex flex-col justify-center gap-4 ${
                     item.destaque 
                       ? 'bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-blue-200/50' 
                       : 'bg-white border border-slate-100 shadow-slate-200/40 text-slate-800'
@@ -139,15 +140,16 @@ export default function StudentDashboard() {
                   </div>
                 ))
               ) : (
-                <div className="col-span-3 bg-blue-50 border border-blue-100 p-8 rounded-[2rem] text-center">
+                <div className="col-span-3 bg-blue-50 border border-blue-100 p-8 rounded-[2rem] text-center w-full">
                   <p className="text-blue-700 font-bold">Você ainda não realizou nenhuma análise. Que tal começar agora?</p>
                 </div>
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Link href="/analise/nova" className="group bg-white p-8 rounded-[2rem] border border-slate-100 shadow-lg hover:shadow-2xl transition-all flex items-center justify-between">
-                <div className="flex items-center gap-5">
+            {/* Cards mais compridos horizontalmente */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <Link href="/analise/nova" className="group bg-white px-10 py-8 rounded-[2rem] border border-slate-100 shadow-lg hover:shadow-2xl transition-all flex items-center justify-between w-full">
+                <div className="flex items-center gap-6">
                   <div className="p-4 bg-blue-50 text-blue-600 rounded-2xl group-hover:bg-blue-600 group-hover:text-white transition-colors">
                     <Microscope size={32} />
                   </div>
@@ -159,8 +161,8 @@ export default function StudentDashboard() {
                 <ArrowRight className="text-slate-300 group-hover:text-blue-600 group-hover:translate-x-2 transition-all" />
               </Link>
 
-              <Link href="/sugestoes" className="group bg-white p-8 rounded-[2rem] border border-slate-100 shadow-lg hover:shadow-2xl transition-all flex items-center justify-between">
-                <div className="flex items-center gap-5">
+              <Link href="/sugestoes" className="group bg-white px-10 py-8 rounded-[2rem] border border-slate-100 shadow-lg hover:shadow-2xl transition-all flex items-center justify-between w-full">
+                <div className="flex items-center gap-6">
                   <div className="p-4 bg-amber-50 text-amber-600 rounded-2xl group-hover:bg-amber-500 group-hover:text-white transition-colors">
                     <Lightbulb size={32} />
                   </div>
@@ -173,7 +175,7 @@ export default function StudentDashboard() {
               </Link>
             </div>
 
-            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/60 overflow-hidden">
+            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/60 overflow-hidden w-full">
               <div className="p-6 md:p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                 <h3 className="font-black text-slate-800 text-lg flex items-center gap-3">
                   <div className="p-2 bg-blue-100 text-blue-600 rounded-lg">
@@ -186,31 +188,31 @@ export default function StudentDashboard() {
                 </Link>
               </div>
               
-              <div className="overflow-x-auto">
+              <div className="w-full">
                 {logs.length === 0 ? (
                   <div className="p-16 text-center text-slate-400 flex flex-col items-center">
                     <AlertCircle size={48} className="text-slate-200 mb-4" />
                     <p className="font-bold text-sm text-slate-500">Seu diário está vazio.</p>
                   </div>
                 ) : (
-                  <table className="w-full text-left border-collapse">
+                  <table className="w-full text-left border-collapse table-fixed md:table-auto">
                     <thead className="bg-slate-50 border-b border-slate-100">
                       <tr>
-                        <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Espécie</th>
-                        <th className="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Data e Hora</th>
-                        <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-center">Gram</th>
+                        <th className="px-10 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] w-1/2 md:w-auto">Espécie</th>
+                        <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Data e Hora</th>
+                        <th className="px-10 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-center">Gram</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-50">
                       {logs.slice(0, 5).map((analise) => (
                         <tr key={analise.id} className="hover:bg-slate-50/50 transition-colors">
-                          <td className="px-8 py-5 font-bold italic text-blue-900">
+                          <td className="px-10 py-6 font-bold italic text-blue-900 truncate">
                             {analise.bacteria?.nome_cientifico}
                           </td>
-                          <td className="px-6 py-5 text-slate-500 font-medium text-xs">
+                          <td className="px-8 py-6 text-slate-500 font-medium text-xs whitespace-nowrap">
                             {formatarData(analise.data_pesquisa)}
                           </td>
-                          <td className="px-8 py-5 text-center">
+                          <td className="px-10 py-6 text-center">
                             <span className={`inline-block px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border ${
                               analise.bacteria?.gram?.toLowerCase() === 'positiva' 
                                 ? 'bg-blue-50 text-blue-700 border-blue-100/50' 

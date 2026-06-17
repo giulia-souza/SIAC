@@ -9,7 +9,8 @@ import {
   ShieldCheck, 
   KeyRound, 
   Loader2,
-  CalendarDays
+  CalendarDays,
+  ShieldAlert
 } from 'lucide-react';
 
 interface UsuarioPerfil {
@@ -97,177 +98,179 @@ export default function PerfilPage() {
 
   const getCorCargo = (regra: string) => {
     switch (regra) {
-      case 'ADMINISTRADOR': return 'text-amber-600 bg-amber-50 border-amber-200';
-      case 'PROFESSOR': return 'text-emerald-600 bg-emerald-50 border-emerald-200';
-      default: return 'text-blue-600 bg-blue-50 border-blue-200';
+      case 'ADMINISTRADOR': return 'text-amber-700 bg-amber-50 border-amber-200';
+      case 'PROFESSOR': return 'text-emerald-700 bg-emerald-50 border-emerald-200';
+      default: return 'text-blue-700 bg-blue-50 border-blue-200';
     }
   };
 
   return (
     <MainLayout>
-      <div className="max-w-4xl mx-auto px-4 pb-20 pt-2">
+      <div className="w-full max-w-[1600px] mx-auto px-6 md:px-12 pb-24 pt-4">
         
-        <div className="mb-8 mt-2 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="mb-12 mt-2 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 bg-blue-600 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest mb-3 shadow-sm">
+            <div className="inline-flex items-center gap-2 bg-blue-600 text-white px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest mb-4 shadow-lg shadow-blue-200">
               <User size={10} /> Conta
             </div>
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+            <h1 className="text-4xl font-black text-slate-900 tracking-tight leading-tight">
               Meu <span className="text-blue-600">Perfil</span>
             </h1>
-            <p className="text-slate-500 mt-1 text-sm font-medium">
+            <p className="text-slate-500 mt-2 text-base font-medium">
               Gerencie suas informações pessoais e de segurança.
             </p>
           </div>
         </div>
 
         {carregando ? (
-          <div className="flex flex-col items-center justify-center py-24 text-slate-400 bg-white rounded-[2rem] border border-slate-100 shadow-sm">
-            <Loader2 size={40} className="animate-spin mb-4 text-blue-500" />
+          <div className="flex flex-col items-center justify-center py-32 text-slate-400 bg-white rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/60 w-full">
+            <Loader2 size={48} className="animate-spin mb-6 text-blue-500" />
             <p className="font-bold text-sm uppercase tracking-widest">Carregando dados...</p>
           </div>
         ) : usuario ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             
-            <div className="lg:col-span-1 bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm flex flex-col items-center text-center">
+            {/* CARD DO AVATAR E INFO RÁPIDA */}
+            <div className="bg-white rounded-[2rem] p-10 border border-slate-100 shadow-xl shadow-slate-200/60 flex flex-col items-center text-center">
               
-              <div className="w-32 h-32 rounded-full bg-slate-50 border-4 border-white shadow-xl shadow-slate-200 flex items-center justify-center font-black text-5xl text-slate-300 uppercase mb-6 relative">
+              <div className="w-36 h-36 rounded-full bg-slate-100 border-4 border-white shadow-xl shadow-slate-200 flex items-center justify-center font-black text-6xl text-slate-300 uppercase mb-8 relative">
                 {usuario.nome.charAt(0)}
-                <div className={`absolute bottom-0 right-0 p-2 rounded-full border-4 border-white shadow-sm ${
+                <div className={`absolute bottom-1 right-1 p-3 rounded-full border-4 border-white shadow-sm ${
                   usuario.regra === 'ESTUDANTE' ? 'bg-blue-100 text-blue-600' : 'bg-amber-100 text-amber-600'
                 }`}>
-                  <ShieldCheck size={18} />
+                  <ShieldCheck size={20} />
                 </div>
               </div>
 
-              <h2 className="text-2xl font-black text-slate-800 tracking-tight leading-tight">
+              <h2 className="text-3xl font-black text-slate-800 tracking-tight leading-tight">
                 {usuario.nome}
               </h2>
               
-              <span className={`mt-3 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border ${getCorCargo(usuario.regra)}`}>
+              <span className={`mt-4 px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border ${getCorCargo(usuario.regra)}`}>
                 {usuario.regra}
               </span>
 
-              <div className="w-full mt-8 pt-6 border-t border-slate-100 space-y-4 text-left">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-slate-50 rounded-lg text-slate-400">
-                    <Mail size={16} />
+              <div className="w-full mt-10 pt-8 border-t border-slate-100 space-y-6 text-left">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-slate-50 rounded-xl text-slate-400">
+                    <Mail size={20} />
                   </div>
                   <div className="overflow-hidden">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">E-mail</p>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">E-mail</p>
                     <p className="text-sm font-bold text-slate-700 truncate">{usuario.email}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-slate-50 rounded-lg text-slate-400">
-                    <CalendarDays size={16} />
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-slate-50 rounded-xl text-slate-400">
+                    <CalendarDays size={20} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Membro desde</p>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Membro desde</p>
                     <p className="text-sm font-bold text-slate-700">2026</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="lg:col-span-2 space-y-6">
+            {/* CARDS DE DADOS E SENHA */}
+            <div className="lg:col-span-2 space-y-8">
               
-              <div className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm">
-                <div className="flex items-center gap-3 border-b border-slate-100 pb-4 mb-6">
-                  <div className="p-2 bg-blue-50 rounded-lg text-blue-600"><User size={18} /></div>
-                  <h2 className="text-[11px] font-black text-slate-700 uppercase tracking-[0.2em]">Dados Pessoais</h2>
+              <div className="bg-white rounded-[2rem] p-10 border border-slate-100 shadow-xl shadow-slate-200/40">
+                <div className="flex items-center gap-3 border-b border-slate-100 pb-5 mb-8">
+                  <div className="p-2.5 bg-blue-50 rounded-xl text-blue-600"><User size={20} /></div>
+                  <h2 className="text-xs font-black text-slate-700 uppercase tracking-[0.2em]">Dados Pessoais</h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-1.5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-2">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] ml-1">Nome Completo</label>
                     <input 
                       type="text" 
                       value={usuario.nome} 
                       disabled 
-                      className="w-full bg-slate-50 border border-slate-200 text-slate-500 rounded-xl px-4 py-3 outline-none text-sm font-bold cursor-not-allowed"
+                      className="w-full bg-slate-50 border border-slate-200 text-slate-500 rounded-2xl px-5 py-4 outline-none text-sm font-bold cursor-not-allowed"
                     />
                   </div>
-
-                  <div className="space-y-1.5">
+                  <div className="space-y-2">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] ml-1">E-mail Institucional</label>
                     <input 
                       type="email" 
                       value={usuario.email} 
                       disabled 
-                      className="w-full bg-slate-50 border border-slate-200 text-slate-500 rounded-xl px-4 py-3 outline-none text-sm font-bold cursor-not-allowed"
+                      className="w-full bg-slate-50 border border-slate-200 text-slate-500 rounded-2xl px-5 py-4 outline-none text-sm font-bold cursor-not-allowed"
                     />
                   </div>
                 </div>
-                <p className="text-xs text-slate-400 font-medium mt-4 italic">
+                <p className="text-xs text-slate-400 font-medium mt-6 italic">
                   * Alterações de nome e e-mail devem ser solicitadas à coordenação.
                 </p>
               </div>
 
-              <div className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
-                   <KeyRound size={120} />
+              <div className="bg-white rounded-[2rem] p-10 border border-slate-100 shadow-xl shadow-slate-200/40 relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none">
+                     <KeyRound size={160} />
                 </div>
 
-                <div className="flex items-center gap-3 border-b border-slate-100 pb-4 mb-6 relative z-10">
-                  <div className="p-2 bg-slate-50 rounded-lg text-slate-600"><KeyRound size={18} /></div>
-                  <h2 className="text-[11px] font-black text-slate-700 uppercase tracking-[0.2em]">Segurança</h2>
+                <div className="flex items-center gap-3 border-b border-slate-100 pb-5 mb-8 relative z-10">
+                  <div className="p-2.5 bg-slate-50 rounded-xl text-slate-600"><KeyRound size={20} /></div>
+                  <h2 className="text-xs font-black text-slate-700 uppercase tracking-[0.2em]">Segurança</h2>
                 </div>
 
-                <form className="space-y-5 relative z-10" onSubmit={handleAtualizarSenha}>
-                  <div className="space-y-1.5 max-w-md">
+                <form className="space-y-6 relative z-10" onSubmit={handleAtualizarSenha}>
+                  <div className="space-y-2 max-w-md">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] ml-1">Senha Atual</label>
                     <input 
                       type="password" 
                       value={senhaAtual}
                       onChange={(e) => setSenhaAtual(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-4 py-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-sm font-bold shadow-sm"
+                      className="w-full bg-white border border-slate-200 text-slate-800 rounded-2xl px-5 py-4 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-sm font-bold shadow-sm"
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div className="space-y-1.5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] ml-1">Nova Senha</label>
                       <input 
                         type="password" 
                         value={novaSenha}
                         onChange={(e) => setNovaSenha(e.target.value)}
                         placeholder="Nova senha secreta"
-                        className="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-4 py-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-sm font-bold shadow-sm"
+                        className="w-full bg-white border border-slate-200 text-slate-800 rounded-2xl px-5 py-4 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-sm font-bold shadow-sm"
                       />
                     </div>
-                    <div className="space-y-1.5">
+                    <div className="space-y-2">
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] ml-1">Confirmar Nova Senha</label>
                       <input 
                         type="password" 
                         value={confirmarSenha}
                         onChange={(e) => setConfirmarSenha(e.target.value)}
                         placeholder="Repita a senha"
-                        className="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-4 py-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-sm font-bold shadow-sm"
+                        className="w-full bg-white border border-slate-200 text-slate-800 rounded-2xl px-5 py-4 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-sm font-bold shadow-sm"
                       />
                     </div>
                   </div>
 
                   {status.mensagem && (
-                    <div className={`mt-2 p-4 rounded-xl text-sm font-bold border ${
+                    <div className={`p-5 rounded-2xl text-sm font-bold border flex items-center gap-3 ${
                       status.type === 'sucesso' 
                         ? 'bg-emerald-50 text-emerald-700 border-emerald-100' 
                         : 'bg-rose-50 text-rose-700 border-rose-100'
                     }`}>
+                      {status.type === 'erro' && <ShieldAlert size={18}/>}
                       {status.mensagem}
                     </div>
                   )}
 
-                  <div className="pt-4 border-t border-slate-50 flex justify-end">
+                  <div className="pt-6 border-t border-slate-50 flex justify-end">
                     <button 
                       type="submit"
                       disabled={!senhaAtual || !novaSenha || novaSenha !== confirmarSenha || atualizandoSenha}
-                      className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:text-slate-500 text-white font-black uppercase tracking-widest text-[10px] py-3.5 px-8 rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
+                      className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:text-slate-500 text-white font-black uppercase tracking-widest text-[10px] py-4 px-10 rounded-2xl shadow-xl shadow-blue-200/50 transition-all active:scale-95 flex items-center justify-center gap-3 min-w-[200px]"
                     >
                       {atualizandoSenha ? (
-                        <><Loader2 size={16} className="animate-spin" /> Atualizando...</>
+                        <><Loader2 size={18} className="animate-spin" /> Atualizando...</>
                       ) : (
                         'Atualizar Senha'
                       )}
